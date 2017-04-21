@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/title_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/title_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/entry_title"
+        android:inputType="textCapWords"
+        />
+
+  </android.support.design.widget.TextInputLayout>
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/details_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/title_container"
+      >
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/details_input"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:inputType="textMultiLine"
+        android:hint="@string/details"
+        />
+
+  </android.support.design.widget.TextInputLayout>
+
+  <android.support.design.widget.TextInputLayout
+      android:id="@+id/address_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/details_container"
+      >
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/address_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/address"
+        />
+
+  </android.support.design.widget.TextInputLayout>
+
+  <Button
+      android:id="@+id/add_image_button"
+      android:layout_below="@id/address_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/add_image"
+      style="@style/Widget.AppCompat.Button.Colored" />
+
+  <ImageView
+      android:id="@+id/journal_image"
+      android:layout_below="@id/add_image_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      />
+
+  <Button
+      android:id="@+id/entry_button"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/save"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentEnd="true"
+      style="@style/Widget.AppCompat.Button.Colored"
+      />
+
+</RelativeLayout>
