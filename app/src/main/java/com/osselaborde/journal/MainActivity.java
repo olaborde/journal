@@ -6,8 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int ADD_ENTRY_REQUEST_CODE = 2;
 
-    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.toolbar_bottom) Toolbar bottomToolbar;
     @BindView(R.id.entriesRv) RecyclerView entriesRv;
     @BindView(R.id.add) ImageView addView;
 
@@ -33,7 +31,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         JournalApplication.getAppComponent().inject(this);
+        bottomToolbar.inflateMenu(R.menu.bottom_menu);
+        bottomToolbar.setTitle(null);
+        bottomToolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.menu_more:
+
+                    return true;
+                case R.id.menu_gallery:
+
+                    return true;
+                case R.id.menu_add:
+
+                    return true;
+                case R.id.menu_calendar:
+
+                    return true;
+            }
+            return false;
+        });
 
         entriesRv.setLayoutManager(new LinearLayoutManager(this));
 
@@ -47,31 +65,6 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.add)
     void onAdd() {
         startActivityForResult(new Intent(this, AddEntryActivity.class), ADD_ENTRY_REQUEST_CODE);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bottom_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_more:
-
-                return true;
-            case R.id.menu_gallery:
-
-                return true;
-            case R.id.menu_add:
-
-                return true;
-            case R.id.menu_calendar:
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

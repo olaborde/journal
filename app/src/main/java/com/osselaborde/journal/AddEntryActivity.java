@@ -14,6 +14,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -21,9 +22,13 @@ import com.osselaborde.journal.data.JournalEntry;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.inject.Inject;
 
-public class AddEntryActivity extends AppCompatActivity {
+public class AddEntryActivity extends AppCompatActivity
+    implements DatePickerFragment.DateSetListener {
 
     private static final String TAG = "AddEntryActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -33,9 +38,13 @@ public class AddEntryActivity extends AppCompatActivity {
     @BindView(R.id.address_input) TextInputEditText addressInput;
     @BindView(R.id.entry_button) Button entryButton;
     @BindView(R.id.journal_image) ImageView journalImage;
+    @BindView(R.id.date) TextView dateTv;
 
     @Inject EntriesManager entriesManager;
     private String journalImagePath;
+    private String dayOfWeekOfEntry;
+    private int dayDateNumber;
+    private String entryDateStr;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +59,7 @@ public class AddEntryActivity extends AppCompatActivity {
         final long entryId = entriesManager.saveEntryInDb(
             JournalEntry.create(-1, titleInput.getText().toString(),
                 detailsInput.getText().toString(), addressInput.getText().toString(),
-                journalImagePath));
+                journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr));
         setResult(RESULT_OK);
         finish();
     }
@@ -60,6 +69,13 @@ public class AddEntryActivity extends AppCompatActivity {
         Intent i = new Intent(Intent.ACTION_PICK,
             android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(i, RESULT_LOAD_IMAGE);
+    }
+
+    @OnClick(R.id.date)
+    public void onDatePick() {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+        newFragment.setDateSetListener(this);
     }
 
     @Override
@@ -83,9 +99,9 @@ public class AddEntryActivity extends AppCompatActivity {
     private String saveToInternalStorage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        // Create imageDir
-        File mypath = new File(directory, "profile.jpg");
-
+        String imageName =
+            "image_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mypath = new File(directory, imageName + ".jpg");
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(mypath);
@@ -101,5 +117,20 @@ public class AddEntryActivity extends AppCompatActivity {
             }
         }
         return directory.getAbsolutePath();
+    }
+
+    @Override
+    public void onDateSet(int year, int month, int day) {
+        dayDateNumber = day;
+        try {
+            SimpleDateFormat inFormat = new SimpleDateFormat("yyyy/MM/dd");
+            entryDateStr = year + "/" + month + "/" + day;
+            dateTv.setText(entryDateStr);
+            Date date = inFormat.parse(entryDateStr);
+            SimpleDateFormat outFormat = new SimpleDateFormat("EEEE");
+            dayOfWeekOfEntry = outFormat.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

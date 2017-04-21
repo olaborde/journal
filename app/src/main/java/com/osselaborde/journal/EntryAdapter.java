@@ -53,6 +53,9 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         @BindView(R.id.address) TextView addressTv;
         @BindView(R.id.item_image) ImageView entryImageView;
 
+        @BindView(R.id.day) TextView dayTv;
+        @BindView(R.id.date_number) TextView dateNumberTv;
+
         public static int getItemLayoutId() {
             return R.layout.entry_item_layout;
         }
@@ -66,6 +69,8 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             titleTv.setText(entry.address());
             detailsTv.setText(entry.details());
             addressTv.setText(entry.address());
+            dayTv.setText(entry.dayOfWeek());
+            dateNumberTv.setText(String.valueOf(entry.dayDateNumber()));
             final String imagePath = entry.imagePath();
             if (!TextUtils.isEmpty(imagePath)) {
                 loadImageFromStorage(imagePath, entryImageView);
