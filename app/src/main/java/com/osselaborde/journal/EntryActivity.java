@@ -39,10 +39,9 @@ import static com.osselaborde.journal.util.ImageHelper.loadImageFromStorage;
  */
 public class EntryActivity extends AppCompatActivity implements DatePickerFragment.DateSetListener {
 
+    public static final String ENTRY_EXTRA = "entry_extra";
     private static final String TAG = "EntryActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
-    public static final String ENTRY_EXTRA = "entry_extra";
-
     @BindView(R.id.title_input) TextInputEditText titleInput;
     @BindView(R.id.details_input) TextInputEditText detailsInput;
     @BindView(R.id.address_input) TextInputEditText addressInput;
@@ -71,6 +70,10 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
         }
     }
 
+    /**
+     * Diplay an entry in the form.
+     * @param entry
+     */
     private void display(JournalEntry entry) {
         setTitle(entry.title());
         titleInput.setText(entry.title());
@@ -95,7 +98,6 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
                 if (currentEntry != null) {
                     entriesManager.deleteEntry(currentEntry);
                     goBack();
-
                 } else {
                     Snackbar.make(entryButton, R.string.cannot_delete_entry, Snackbar.LENGTH_LONG)
                         .show();
@@ -105,6 +107,14 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
         return super.onOptionsItemSelected(item);
     }
 
+    private void goBack() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
+    /**
+     * Validates and saves changes to the entry.
+     */
     @OnClick(R.id.entry_button)
     void onEntrySave() {
         if (TextUtils.isEmpty(titleInput.getText()) || TextUtils.isEmpty(detailsInput.getText())) {
@@ -115,21 +125,15 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
             final JournalEntry entry = JournalEntry.create(-1, titleInput.getText().toString(),
                 detailsInput.getText().toString(), addressInput.getText().toString(),
                 journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr);
-            final long entryId = entriesManager.createEntry(
-                entry);
-        }
-        else {
-            JournalEntry entry = JournalEntry.create(currentEntry.id(), titleInput.getText().toString(),
-                detailsInput.getText().toString(), addressInput.getText().toString(),
-                journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr);
+            final long entryId = entriesManager.createEntry(entry);
+        } else {
+            JournalEntry entry =
+                JournalEntry.create(currentEntry.id(), titleInput.getText().toString(),
+                    detailsInput.getText().toString(), addressInput.getText().toString(),
+                    journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr);
             entriesManager.editEntry(entry);
         }
         goBack();
-    }
-
-    private void goBack() {
-        setResult(RESULT_OK);
-        finish();
     }
 
     @OnClick(R.id.add_image_button)
@@ -175,6 +179,11 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
         }
     }
 
+    /**
+     * Saves a bitmap to internal storage.
+     * @param bitmapImage
+     * @return
+     */
     private String saveToInternalStorage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
@@ -198,6 +207,12 @@ public class EntryActivity extends AppCompatActivity implements DatePickerFragme
         return directory.getAbsolutePath() + "/" + imageName;
     }
 
+    /**
+     * Callback when a date is set with the DatePicker.
+     * @param year
+     * @param month
+     * @param day
+     */
     @Override
     public void onDateSet(int year, int month, int day) {
         dayDateNumber = day;

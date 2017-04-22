@@ -10,6 +10,14 @@ public class JournalApplication extends Application {
     private static JournalApplication instance;
     private AppComponent component;
 
+    public static AppComponent getAppComponent() {
+        return instance.getComponent();
+    }
+
+    public AppComponent getComponent() {
+        return component;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,13 +28,5 @@ public class JournalApplication extends Application {
 
     protected void initAppComponent() {
         component = AppComponent.Initializer.init(this);
-    }
-
-    public AppComponent getComponent() {
-        return component;
-    }
-
-    public static AppComponent getAppComponent() {
-        return instance.getComponent();
     }
 }

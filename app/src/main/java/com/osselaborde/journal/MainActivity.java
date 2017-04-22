@@ -91,10 +91,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches the saved entries.
+     */
     private void fetchEntries() {
         compositeSubscription.add(entriesManager.getEntries()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(entryAdapter));
+    }
+
+    @Override
+    protected void onDestroy() {
+        compositeSubscription.clear();
+        super.onDestroy();
     }
 
     @OnClick({ R.id.add, R.id.image })
@@ -106,11 +115,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fetchEntries();
-    }
-
-    @Override
-    protected void onDestroy() {
-        compositeSubscription.clear();
-        super.onDestroy();
     }
 }

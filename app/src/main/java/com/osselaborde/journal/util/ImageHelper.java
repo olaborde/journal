@@ -7,6 +7,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+/**
+ * Helper for image utilities.
+ */
 public final class ImageHelper {
 
     public static void loadImageFromStorage(String path, ImageView imageView) {

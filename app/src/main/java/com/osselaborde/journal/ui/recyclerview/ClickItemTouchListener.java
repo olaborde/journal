@@ -10,13 +10,26 @@ import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 
+/**
+ * Adds support for click listener for recyclerview.
+ */
 public abstract class ClickItemTouchListener implements OnItemTouchListener {
 
     private final ItemClickGestureDetector itemGestureDetector;
 
     public ClickItemTouchListener(RecyclerView hostView) {
         itemGestureDetector = new ItemClickGestureDetector(hostView.getContext(),
-                new ItemClickGestureListener(hostView));
+            new ItemClickGestureListener(hostView));
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent event) {
+        if (!isAttachedToWindow(recyclerView) || !hasAdapter(recyclerView)) {
+            return false;
+        }
+
+        itemGestureDetector.onTouchEvent(event);
+        return false;
     }
 
     private boolean isAttachedToWindow(RecyclerView hostView) {
@@ -32,16 +45,6 @@ public abstract class ClickItemTouchListener implements OnItemTouchListener {
     }
 
     @Override
-    public boolean onInterceptTouchEvent(RecyclerView recyclerView, MotionEvent event) {
-        if (!isAttachedToWindow(recyclerView) || !hasAdapter(recyclerView)) {
-            return false;
-        }
-
-        itemGestureDetector.onTouchEvent(event);
-        return false;
-    }
-
-    @Override
     public void onTouchEvent(RecyclerView recyclerView, MotionEvent event) {
         // We can silently track tap and and long presses by silently
         // intercepting touch events in the host RecyclerView.
@@ -49,6 +52,7 @@ public abstract class ClickItemTouchListener implements OnItemTouchListener {
 
     protected abstract boolean performItemClick(RecyclerView parent, View view, int position,
         long id);
+
     public abstract boolean performItemLongClick(RecyclerView parent, View view, int position,
         long id);
 
@@ -93,22 +97,6 @@ public abstract class ClickItemTouchListener implements OnItemTouchListener {
         }
 
         @Override
-        public boolean onDown(MotionEvent event) {
-            final int x = (int) event.getX();
-            final int y = (int) event.getY();
-
-            targetChild = hostView.findChildViewUnder(x, y);
-            return (targetChild != null);
-        }
-
-        @Override
-        public void onShowPress(MotionEvent event) {
-            if (targetChild != null) {
-                targetChild.setPressed(true);
-            }
-        }
-
-        @Override
         public boolean onSingleTapUp(MotionEvent event) {
             boolean handled = false;
 
@@ -126,18 +114,6 @@ public abstract class ClickItemTouchListener implements OnItemTouchListener {
         }
 
         @Override
-        public boolean onScroll(MotionEvent event, MotionEvent event2, float v, float v2) {
-            if (targetChild != null) {
-                targetChild.setPressed(false);
-                targetChild = null;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        @Override
         public void onLongPress(MotionEvent event) {
             if (targetChild == null) {
                 return;
@@ -151,6 +127,34 @@ public abstract class ClickItemTouchListener implements OnItemTouchListener {
                 targetChild.setPressed(false);
                 targetChild = null;
             }
+        }
+
+        @Override
+        public boolean onScroll(MotionEvent event, MotionEvent event2, float v, float v2) {
+            if (targetChild != null) {
+                targetChild.setPressed(false);
+                targetChild = null;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        @Override
+        public void onShowPress(MotionEvent event) {
+            if (targetChild != null) {
+                targetChild.setPressed(true);
+            }
+        }
+
+        @Override
+        public boolean onDown(MotionEvent event) {
+            final int x = (int) event.getX();
+            final int y = (int) event.getY();
+
+            targetChild = hostView.findChildViewUnder(x, y);
+            return (targetChild != null);
         }
     }
 }

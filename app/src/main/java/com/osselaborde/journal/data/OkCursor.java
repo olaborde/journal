@@ -8,125 +8,125 @@ import android.database.CursorWrapper;
  */
 public final class OkCursor extends CursorWrapper implements Cursor {
 
-  public OkCursor(Cursor cursor) {
-    super(cursor);
-  }
-
-  public byte[] getBlob(String column) {
-    return getBlob(getColumnIndexOrThrow(column));
-  }
-
-  public byte[] getBlob(String column, byte[] defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getBlob(column);
-  }
-
-  public boolean getBoolean(String column) {
-    int i = getInt(getColumnIndexOrThrow(column));
-    if ((i < 0) || (i > 1)) {
-      throw new IllegalStateException("column " + column + " out of range [0,1]: " + i);
+    public OkCursor(Cursor cursor) {
+        super(cursor);
     }
-    return i == 1;
-  }
 
-  public boolean getBoolean(String column, boolean defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getBoolean(column);
-  }
+    public byte[] getBlob(String column, byte[] defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getBlob(column);
+    }
 
-  public double getDouble(String column) {
-    return getDouble(getColumnIndexOrThrow(column));
-  }
+    public boolean isNull(String column) {
+        return (getColumnIndex(column) == -1) || (isNull(getColumnIndex(column)));
+    }
 
-  public double getDouble(String column, double defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getDouble(column);
-  }
+    public byte[] getBlob(String column) {
+        return getBlob(getColumnIndexOrThrow(column));
+    }
 
-  public <T extends Enum<T>> T getEnum(String column, Class<T> clazz) {
-    return Enum.valueOf(clazz, getString(column));
-  }
+    public boolean getBoolean(String column, boolean defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getBoolean(column);
+    }
 
-  public <T extends Enum<T>> T getEnum(String column, Class<T> clazz, T defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getEnum(column, clazz);
-  }
+    public boolean getBoolean(String column) {
+        int i = getInt(getColumnIndexOrThrow(column));
+        if ((i < 0) || (i > 1)) {
+            throw new IllegalStateException("column " + column + " out of range [0,1]: " + i);
+        }
+        return i == 1;
+    }
 
-  public float getFloat(String column) {
-    return getFloat(getColumnIndexOrThrow(column));
-  }
+    public double getDouble(String column, double defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getDouble(column);
+    }
 
-  public float getFloat(String column, float defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getFloat(column);
-  }
+    public double getDouble(String column) {
+        return getDouble(getColumnIndexOrThrow(column));
+    }
 
-  public int getInt(String column) {
-    return getInt(getColumnIndexOrThrow(column));
-  }
+    public <T extends Enum<T>> T getEnum(String column, Class<T> clazz, T defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getEnum(column, clazz);
+    }
 
-  public int getInt(String column, int paramInt) {
-    if (isNull(column)) return paramInt;
-    return getInt(column);
-  }
+    public <T extends Enum<T>> T getEnum(String column, Class<T> clazz) {
+        return Enum.valueOf(clazz, getString(column));
+    }
 
-  public long getLong(String column) {
-    return getLong(getColumnIndexOrThrow(column));
-  }
+    public String getString(String column) {
+        return getString(getColumnIndexOrThrow(column));
+    }
 
-  public long getLong(String column, long defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getLong(column);
-  }
+    public float getFloat(String column, float defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getFloat(column);
+    }
 
-  public String getString(String column) {
-    return getString(getColumnIndexOrThrow(column));
-  }
+    public float getFloat(String column) {
+        return getFloat(getColumnIndexOrThrow(column));
+    }
 
-  public String getString(String column, String defaultVal) {
-    if (isNull(column)) return defaultVal;
-    return getString(column);
-  }
+    public int getInt(String column, int paramInt) {
+        if (isNull(column)) return paramInt;
+        return getInt(column);
+    }
 
-  public boolean isNull(String column) {
-    return (getColumnIndex(column) == -1) || (isNull(getColumnIndex(column)));
-  }
+    public int getInt(String column) {
+        return getInt(getColumnIndexOrThrow(column));
+    }
 
-  public void close() {
-    if (getWrappedCursor() != null) super.close();
-  }
+    public long getLong(String column, long defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getLong(column);
+    }
 
-  public int getCount() {
-    if (getWrappedCursor() == null) return 0;
-    return super.getCount();
-  }
+    public long getLong(String column) {
+        return getLong(getColumnIndexOrThrow(column));
+    }
 
-  public boolean moveToFirst() {
-    return (getWrappedCursor() != null) && (super.moveToFirst());
-  }
+    public String getString(String column, String defaultVal) {
+        if (isNull(column)) return defaultVal;
+        return getString(column);
+    }
 
-  public int getColumnCount() {
-    if (getWrappedCursor() == null) return 0;
-    return super.getColumnCount();
-  }
+    public void close() {
+        if (getWrappedCursor() != null) super.close();
+    }
 
-  public boolean moveToLast() {
-    return (getWrappedCursor() != null) && (super.moveToLast());
-  }
+    public int getCount() {
+        if (getWrappedCursor() == null) return 0;
+        return super.getCount();
+    }
 
-  public boolean move(int offset) {
-    return (getWrappedCursor() != null) && (super.move(offset));
-  }
+    public boolean moveToFirst() {
+        return (getWrappedCursor() != null) && (super.moveToFirst());
+    }
 
-  public boolean moveToPosition(int position) {
-    return (getWrappedCursor() != null) && (super.moveToPosition(position));
-  }
+    public int getColumnCount() {
+        if (getWrappedCursor() == null) return 0;
+        return super.getColumnCount();
+    }
 
-  public boolean moveToNext() {
-    return (getWrappedCursor() != null) && (super.moveToNext());
-  }
+    public boolean moveToLast() {
+        return (getWrappedCursor() != null) && (super.moveToLast());
+    }
 
-  public boolean moveToPrevious() {
-    return (getWrappedCursor() != null) && (super.moveToPrevious());
-  }
+    public boolean move(int offset) {
+        return (getWrappedCursor() != null) && (super.move(offset));
+    }
+
+    public boolean moveToPosition(int position) {
+        return (getWrappedCursor() != null) && (super.moveToPosition(position));
+    }
+
+    public boolean moveToNext() {
+        return (getWrappedCursor() != null) && (super.moveToNext());
+    }
+
+    public boolean moveToPrevious() {
+        return (getWrappedCursor() != null) && (super.moveToPrevious());
+    }
 }

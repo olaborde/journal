@@ -7,12 +7,13 @@ import javax.inject.Singleton;
 /**
  * Main dagger components to contain the singleton modules of the app.
  */
-@Singleton
-@Component(modules = { AppModule.class, DataModule.class })
+@Singleton @Component(modules = { AppModule.class, DataModule.class })
 public interface AppComponent {
 
     void inject(JournalApplication journalApplication);
+
     void inject(MainActivity mainActivity);
+
     void inject(EntryActivity entryActivity);
 
     final class Initializer {
@@ -23,5 +24,4 @@ public interface AppComponent {
             return DaggerAppComponent.builder().appModule(new AppModule(app)).build();
         }
     }
-
 }

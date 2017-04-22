@@ -20,14 +20,6 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         super(context, JOURNAL_DB, null, DB_VERSION);
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-        if (Build.VERSION.SDK_INT < 16) {
-            db.execSQL("PRAGMA foreign_keys = ON;");
-        }
-        db.execSQL(CREATE_ENTRY);
-    }
-
     public void recreateDb() {
         recreateDb(getWritableDatabase());
     }
@@ -37,17 +29,24 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion != DB_VERSION) {
-            recreateDb(db);
-        }
-    }
-
     @TargetApi(16)
     @Override
     public void onConfigure(SQLiteDatabase db) {
         db.setForeignKeyConstraintsEnabled(true);
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        if (Build.VERSION.SDK_INT < 16) {
+            db.execSQL("PRAGMA foreign_keys = ON;");
+        }
+        db.execSQL(CREATE_ENTRY);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion != DB_VERSION) {
+            recreateDb(db);
+        }
+    }
 }

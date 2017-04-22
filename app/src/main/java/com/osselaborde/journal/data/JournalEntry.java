@@ -51,11 +51,43 @@ import rx.functions.Func1;
 
     public static Func1<Cursor, JournalEntry> MAPPER = cursor -> create(new OkCursor(cursor));
 
+    public static JournalEntry create(OkCursor okCursor) {
+        long id = okCursor.getLong(JournalEntry.ID);
+        String title = okCursor.getString(JournalEntry.TITLE);
+        String details = okCursor.getString(JournalEntry.DETAILS);
+        String address = okCursor.getString(JournalEntry.ADDRESS);
+        String imagePath = okCursor.getString(JournalEntry.IMAGE_PATH);
+        String dayOfWeek = okCursor.getString(JournalEntry.DAY_OF_WEEK);
+        int dayDateNumber = okCursor.getInt(JournalEntry.DAY_DATE_NUMBER);
+        String creationDate = okCursor.getString(JournalEntry.CREATION_DATE);
+        return JournalEntry.create(id, title, details, address, imagePath, dayOfWeek, dayDateNumber,
+            creationDate);
+    }
+
     public static JournalEntry create(long id, String title, String details,
         @NonNull String address, String imagePath, String dayOfWeekOfEntry, int dayDateNumber,
         String creationDate) {
         return new AutoParcel_JournalEntry(id, title, details, address, imagePath, dayOfWeekOfEntry,
             dayDateNumber, creationDate);
+    }
+
+    public long insertInto(BriteDatabase db) {
+        return db.insert(JournalEntry.TABLE, toContentValues());
+    }
+
+    private ContentValues toContentValues() {
+        Builder builder = new Builder();
+        if (id() > 0) {
+            builder = builder.id(id());
+        }
+        return builder.title(title())
+            .details(details())
+            .address(address())
+            .imagePath(imagePath())
+            .dayOfWeekOfEntry(dayOfWeek())
+            .dayDateNumber(dayDateNumber())
+            .creationDate(creationDate())
+            .build();
     }
 
     public abstract long id();
@@ -79,44 +111,12 @@ import rx.functions.Func1;
     @Nullable
     public abstract String creationDate();
 
-    public static JournalEntry create(OkCursor okCursor) {
-        long id = okCursor.getLong(JournalEntry.ID);
-        String title = okCursor.getString(JournalEntry.TITLE);
-        String details = okCursor.getString(JournalEntry.DETAILS);
-        String address = okCursor.getString(JournalEntry.ADDRESS);
-        String imagePath = okCursor.getString(JournalEntry.IMAGE_PATH);
-        String dayOfWeek = okCursor.getString(JournalEntry.DAY_OF_WEEK);
-        int dayDateNumber = okCursor.getInt(JournalEntry.DAY_DATE_NUMBER);
-        String creationDate = okCursor.getString(JournalEntry.CREATION_DATE);
-        return JournalEntry.create(id, title, details, address, imagePath, dayOfWeek, dayDateNumber,
-            creationDate);
-    }
-
-    public long insertInto(BriteDatabase db) {
-        return db.insert(JournalEntry.TABLE, toContentValues());
-    }
-
     public int deleteInto(BriteDatabase db) {
         return db.delete(TABLE, JournalEntry.ID + "=?", String.valueOf(id()));
     }
 
     public void updateInto(BriteDatabase db) {
         db.update(TABLE, toContentValues(), ID + "=?", String.valueOf(id()));
-    }
-
-    private ContentValues toContentValues() {
-        Builder builder = new Builder();
-        if (id() > 0) {
-            builder = builder.id(id());
-        }
-        return builder.title(title())
-            .details(details())
-            .address(address())
-            .imagePath(imagePath())
-            .dayOfWeekOfEntry(dayOfWeek())
-            .dayDateNumber(dayDateNumber())
-            .creationDate(creationDate())
-            .build();
     }
 
     public static final class Builder {

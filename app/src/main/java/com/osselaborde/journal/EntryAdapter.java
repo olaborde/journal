@@ -1,7 +1,5 @@
 package com.osselaborde.journal;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,9 +11,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.osselaborde.journal.data.JournalEntry;
 import com.osselaborde.journal.util.ImageHelper;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import rx.functions.Action1;
@@ -67,13 +62,13 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         @BindView(R.id.day) TextView dayTv;
         @BindView(R.id.date_number) TextView dateNumberTv;
 
-        public static int getItemLayoutId() {
-            return R.layout.entry_item_layout;
-        }
-
         public EntryViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public static int getItemLayoutId() {
+            return R.layout.entry_item_layout;
         }
 
         void bind(JournalEntry entry) {
@@ -81,18 +76,16 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             detailsTv.setText(entry.details());
             addressTv.setText(entry.address());
             dayTv.setText(entry.dayOfWeek());
-            if(entry.dayDateNumber() > 0) {
+            if (entry.dayDateNumber() > 0) {
                 dateNumberTv.setText(String.valueOf(entry.dayDateNumber()));
             }
             final String imagePath = entry.imagePath();
             if (!TextUtils.isEmpty(imagePath)) {
                 ImageHelper.loadImageFromStorage(imagePath, entryImageView);
                 entryImageView.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 entryImageView.setVisibility(View.GONE);
             }
         }
-
     }
 }

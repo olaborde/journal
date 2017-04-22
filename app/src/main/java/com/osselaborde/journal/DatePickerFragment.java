@@ -40,5 +40,4 @@ public class DatePickerFragment extends DialogFragment
     public interface DateSetListener {
         void onDateSet(int year, int month, int day);
     }
-
 }
