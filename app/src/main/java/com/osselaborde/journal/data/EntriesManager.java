@@ -15,12 +15,20 @@ public class EntriesManager {
         this.db = db;
     }
 
-    public long saveEntryInDb(final JournalEntry entry) {
+    public long createEntry(final JournalEntry entry) {
         return entry.insertInto(db);
     }
 
     public Observable<List<JournalEntry>> getEntries() {
         return db.createQuery(JournalEntry.TABLE, JournalEntry.GET_ENTRIES)
             .mapToList(JournalEntry.MAPPER);
+    }
+
+    public void editEntry(JournalEntry entry) {
+        entry.updateInto(db);
+    }
+
+    public void deleteEntry(JournalEntry entry) {
+        entry.deleteInto(db);
     }
 }

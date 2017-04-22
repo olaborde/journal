@@ -11,4 +11,7 @@
   <string name="add_image">Add image</string>
   <string name="pick_time">Choose Date</string>
   <string name="fill_required_entry">Please fill title and details of the Entry.</string>
+  <string name="delete">Delete</string>
+  <string name="add_entry">Add Entry</string>
+  <string name="cannot_delete_entry">Entry is not yet saved.</string>
 </resources>

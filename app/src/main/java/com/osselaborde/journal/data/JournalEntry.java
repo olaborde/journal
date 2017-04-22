@@ -2,6 +2,7 @@ package com.osselaborde.journal.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import auto.parcel.AutoParcel;
@@ -11,7 +12,7 @@ import rx.functions.Func1;
 /**
  * Entry model.
  */
-@AutoParcel public abstract class JournalEntry {
+@AutoParcel public abstract class JournalEntry implements Parcelable {
 
     public static final String TABLE = "entry";
     public static final String ID = "entry_id";
@@ -93,6 +94,14 @@ import rx.functions.Func1;
 
     public long insertInto(BriteDatabase db) {
         return db.insert(JournalEntry.TABLE, toContentValues());
+    }
+
+    public int deleteInto(BriteDatabase db) {
+        return db.delete(TABLE, JournalEntry.ID + "=?", String.valueOf(id()));
+    }
+
+    public void updateInto(BriteDatabase db) {
+        db.update(TABLE, toContentValues(), ID + "=?", String.valueOf(id()));
     }
 
     private ContentValues toContentValues() {

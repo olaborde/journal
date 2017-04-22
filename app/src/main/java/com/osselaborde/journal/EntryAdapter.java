@@ -12,6 +12,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.osselaborde.journal.data.JournalEntry;
+import com.osselaborde.journal.util.ImageHelper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -85,7 +86,7 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             }
             final String imagePath = entry.imagePath();
             if (!TextUtils.isEmpty(imagePath)) {
-                loadImageFromStorage(imagePath, entryImageView);
+                ImageHelper.loadImageFromStorage(imagePath, entryImageView);
                 entryImageView.setVisibility(View.VISIBLE);
             }
             else {
@@ -93,14 +94,5 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
             }
         }
 
-        private void loadImageFromStorage(String path, ImageView imageView) {
-            try {
-                File f = new File(path);
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
-                imageView.setImageBitmap(b);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

@@ -2,7 +2,6 @@ package com.osselaborde.journal;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
                 long id) {
                 Intent intent = new Intent(MainActivity.this, EntryActivity.class);
                 intent.putExtra(EntryActivity.ENTRY_EXTRA,
-                    (Parcelable) entryAdapter.getItemByPosition(position));
+                    entryAdapter.getItemByPosition(position));
+                startActivity(intent);
                 return true;
             }
 
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             .subscribe(entryAdapter));
     }
 
-    @OnClick({ R.id.add, R.id.image})
+    @OnClick({ R.id.add, R.id.image })
     void onAdd() {
         startActivityForResult(new Intent(this, EntryActivity.class), ADD_ENTRY_REQUEST_CODE);
     }

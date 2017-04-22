@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -15,6 +14,8 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,11 +32,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.inject.Inject;
 
+import static com.osselaborde.journal.util.ImageHelper.loadImageFromStorage;
+
 /**
  * Add entry screen.
  */
-public class EntryActivity extends AppCompatActivity
-    implements DatePickerFragment.DateSetListener {
+public class EntryActivity extends AppCompatActivity implements DatePickerFragment.DateSetListener {
 
     private static final String TAG = "EntryActivity";
     private static final int RESULT_LOAD_IMAGE = 1;
@@ -53,6 +55,7 @@ public class EntryActivity extends AppCompatActivity
     private int dayDateNumber;
     private String entryDateStr;
     private Uri uriForFile;
+    @Nullable private JournalEntry currentEntry;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,15 +64,45 @@ public class EntryActivity extends AppCompatActivity
         ButterKnife.bind(this);
         JournalApplication.getAppComponent().inject(this);
 
-        if(getIntent().hasExtra(ENTRY_EXTRA)) {
-            display(getIntent().getParcelableExtra(ENTRY_EXTRA));
+        setTitle(R.string.add_entry);
+        if (getIntent().hasExtra(ENTRY_EXTRA)) {
+            currentEntry = getIntent().getParcelableExtra(ENTRY_EXTRA);
+            display(currentEntry);
         }
     }
 
     private void display(JournalEntry entry) {
+        setTitle(entry.title());
         titleInput.setText(entry.title());
         detailsInput.setText(entry.details());
         addressInput.setText(entry.address());
+        dateTv.setText(entry.creationDate());
+        if (!TextUtils.isEmpty(entry.imagePath())) {
+            loadImageFromStorage(entry.imagePath(), journalImage);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.entry_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_entry:
+                if (currentEntry != null) {
+                    entriesManager.deleteEntry(currentEntry);
+                    goBack();
+
+                } else {
+                    Snackbar.make(entryButton, R.string.cannot_delete_entry, Snackbar.LENGTH_LONG)
+                        .show();
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @OnClick(R.id.entry_button)
@@ -78,10 +111,23 @@ public class EntryActivity extends AppCompatActivity
             Snackbar.make(entryButton, R.string.fill_required_entry, Snackbar.LENGTH_LONG).show();
             return;
         }
-        final long entryId = entriesManager.saveEntryInDb(
-            JournalEntry.create(-1, titleInput.getText().toString(),
+        if (currentEntry == null) {
+            final JournalEntry entry = JournalEntry.create(-1, titleInput.getText().toString(),
                 detailsInput.getText().toString(), addressInput.getText().toString(),
-                journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr));
+                journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr);
+            final long entryId = entriesManager.createEntry(
+                entry);
+        }
+        else {
+            JournalEntry entry = JournalEntry.create(currentEntry.id(), titleInput.getText().toString(),
+                detailsInput.getText().toString(), addressInput.getText().toString(),
+                journalImagePath, dayOfWeekOfEntry, dayDateNumber, entryDateStr);
+            entriesManager.editEntry(entry);
+        }
+        goBack();
+    }
+
+    private void goBack() {
         setResult(RESULT_OK);
         finish();
     }
@@ -132,7 +178,8 @@ public class EntryActivity extends AppCompatActivity
     private String saveToInternalStorage(Bitmap bitmapImage) {
         ContextWrapper cw = new ContextWrapper(getApplicationContext());
         File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-        String imageName = "image_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
+        String imageName =
+            "image_" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".jpg";
         File imagePath = new File(directory, imageName);
         FileOutputStream fos = null;
         try {
@@ -148,7 +195,7 @@ public class EntryActivity extends AppCompatActivity
                 e.printStackTrace();
             }
         }
-        return directory.getAbsolutePath() + "/"+ imageName;
+        return directory.getAbsolutePath() + "/" + imageName;
     }
 
     @Override
