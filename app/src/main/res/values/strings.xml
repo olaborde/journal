@@ -10,4 +10,5 @@
   <string name="save">SAVE</string>
   <string name="add_image">Add image</string>
   <string name="pick_time">Choose Date</string>
+  <string name="fill_required_entry">Please fill title and details of the Entry.</string>
 </resources>

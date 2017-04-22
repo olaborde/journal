@@ -1,10 +1,12 @@
-package com.osselaborde.journal;
+package com.osselaborde.journal.data;
 
-import com.osselaborde.journal.data.JournalEntry;
 import com.squareup.sqlbrite.BriteDatabase;
 import java.util.List;
 import rx.Observable;
 
+/**
+ * Contains the model logic for entries.
+ */
 public class EntriesManager {
 
     private final BriteDatabase db;
@@ -13,11 +15,11 @@ public class EntriesManager {
         this.db = db;
     }
 
-    long saveEntryInDb(final JournalEntry entry) {
+    public long saveEntryInDb(final JournalEntry entry) {
         return entry.insertInto(db);
     }
 
-    Observable<List<JournalEntry>> getEntries() {
+    public Observable<List<JournalEntry>> getEntries() {
         return db.createQuery(JournalEntry.TABLE, JournalEntry.GET_ENTRIES)
             .mapToList(JournalEntry.MAPPER);
     }

@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import rx.functions.Action1;
 
+/**
+ * Adapter to display entries data on a list.
+ */
 public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHolder>
     implements Action1<List<JournalEntry>> {
 
@@ -44,15 +47,22 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
     @Override
     public void call(List<JournalEntry> journalEntries) {
         this.items = journalEntries;
+        notifyDataSetChanged();
     }
 
+    public JournalEntry getItemByPosition(int position) {
+        return items.get(position);
+    }
+
+    /**
+     * View holder for each entry item.
+     */
     static class EntryViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.title) TextView titleTv;
         @BindView(R.id.details) TextView detailsTv;
         @BindView(R.id.address) TextView addressTv;
         @BindView(R.id.item_image) ImageView entryImageView;
-
         @BindView(R.id.day) TextView dayTv;
         @BindView(R.id.date_number) TextView dateNumberTv;
 
@@ -66,14 +76,20 @@ public class EntryAdapter extends RecyclerView.Adapter<EntryAdapter.EntryViewHol
         }
 
         void bind(JournalEntry entry) {
-            titleTv.setText(entry.address());
+            titleTv.setText(entry.title());
             detailsTv.setText(entry.details());
             addressTv.setText(entry.address());
             dayTv.setText(entry.dayOfWeek());
-            dateNumberTv.setText(String.valueOf(entry.dayDateNumber()));
+            if(entry.dayDateNumber() > 0) {
+                dateNumberTv.setText(String.valueOf(entry.dayDateNumber()));
+            }
             final String imagePath = entry.imagePath();
             if (!TextUtils.isEmpty(imagePath)) {
                 loadImageFromStorage(imagePath, entryImageView);
+                entryImageView.setVisibility(View.VISIBLE);
+            }
+            else {
+                entryImageView.setVisibility(View.GONE);
             }
         }
 

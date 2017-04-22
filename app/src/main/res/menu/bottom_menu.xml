@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item android:id="@+id/menu_more"
-        android:title="@string/more"
-        app:showAsAction="always"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
 
     <item android:id="@+id/menu_gallery"
         android:title="@string/gallery"
@@ -16,6 +14,18 @@
 
     <item android:id="@+id/menu_calendar"
         android:title="@string/calendar"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/menu_more"
+        android:title="@string/more"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/menu2"
+        android:title=""
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/menu1"
+        android:title=""
         app:showAsAction="always"/>
 
 </menu>

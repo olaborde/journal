@@ -3,12 +3,13 @@ package com.osselaborde.journal.data;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import auto.parcel.AutoParcel;
 import com.squareup.sqlbrite.BriteDatabase;
 import rx.functions.Func1;
 
 /**
- * Created by osselaborde on 4/17/17.
+ * Entry model.
  */
 @AutoParcel public abstract class JournalEntry {
 
@@ -31,7 +32,7 @@ import rx.functions.Func1;
         + ID
         + " INTEGER NOT NULL PRIMARY KEY,"
         + TITLE
-        + " TEXT NOT NULL UNIQUE, "
+        + " TEXT NOT NULL, "
         + DETAILS
         + " TEXT, "
         + ADDRESS
@@ -62,14 +63,19 @@ import rx.functions.Func1;
 
     public abstract String details();
 
+    @Nullable
     public abstract String address();
 
+    @Nullable
     public abstract String imagePath();
 
+    @Nullable
     public abstract String dayOfWeek();
 
+    @Nullable
     public abstract int dayDateNumber();
 
+    @Nullable
     public abstract String creationDate();
 
     public static JournalEntry create(OkCursor okCursor) {
@@ -122,17 +128,17 @@ import rx.functions.Func1;
             return this;
         }
 
-        public Builder address(String address) {
+        public Builder address(@Nullable String address) {
             values.put(ADDRESS, address);
             return this;
         }
 
-        public Builder imagePath(String imagePath) {
+        public Builder imagePath(@Nullable String imagePath) {
             values.put(IMAGE_PATH, imagePath);
             return this;
         }
 
-        public Builder dayOfWeekOfEntry(String dayOfWeekOfEntry) {
+        public Builder dayOfWeekOfEntry(@Nullable String dayOfWeekOfEntry) {
             values.put(DAY_OF_WEEK, dayOfWeekOfEntry);
             return this;
         }
@@ -142,7 +148,7 @@ import rx.functions.Func1;
             return this;
         }
 
-        public Builder creationDate(String creationDate) {
+        public Builder creationDate(@Nullable String creationDate) {
             values.put(CREATION_DATE, creationDate);
             return this;
         }

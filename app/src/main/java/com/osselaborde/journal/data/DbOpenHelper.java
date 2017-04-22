@@ -8,9 +8,12 @@ import android.os.Build;
 
 import static com.osselaborde.journal.data.JournalEntry.CREATE_ENTRY;
 
+/**
+ * Helper for creating and upgrading the database.
+ */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 6;
+    private static final int DB_VERSION = 7;
     private static final String JOURNAL_DB = "journal.db";
 
     public DbOpenHelper(Context context) {

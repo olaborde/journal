@@ -2,6 +2,9 @@ package com.osselaborde.journal;
 
 import android.app.Application;
 
+/**
+ * Application object for initialising nqpp state qnd dependencies.
+ */
 public class JournalApplication extends Application {
 
     private static JournalApplication instance;

@@ -3,6 +3,9 @@ package com.osselaborde.journal.data;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
+/**
+ * Helper class for cursors for the results we get from the database.
+ */
 public final class OkCursor extends CursorWrapper implements Cursor {
 
   public OkCursor(Cursor cursor) {

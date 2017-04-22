@@ -2,7 +2,6 @@ package com.osselaborde.journal.data;
 
 import android.content.Context;
 import android.util.Log;
-import com.osselaborde.journal.EntriesManager;
 import com.osselaborde.journal.annotation.ApplicationContext;
 import com.squareup.sqlbrite.BriteDatabase;
 import com.squareup.sqlbrite.SqlBrite;
@@ -11,6 +10,9 @@ import dagger.Provides;
 import javax.inject.Singleton;
 import rx.schedulers.Schedulers;
 
+/**
+ * Dagger module to provide data dependencies in the app.
+ */
 @Module public class DataModule {
 
     @Provides
